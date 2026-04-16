@@ -8,6 +8,7 @@ BOOKLET_SEQUENCE = [
     {"id": "BK-2025B-2", "name": "2025 Cal B Versión #2"},
     {"id": "BK-2025B-1", "name": "2025 Cal B Versión #1"},
     {"id": "BK-VIP-9", "name": "SIMULACRO VIP #9"},
+    {"id": "BK-2025A-2", "name": "2025 Cal A Versión #2"},
     {"id": "BK-VIP-8", "name": "SIMULACRO VIP #8"},
     {"id": "BK-VIP-7", "name": "SIMULACRO VIP #7"},
     {"id": "BK-VIP-6", "name": "SIMULACRO VIP #6"},
