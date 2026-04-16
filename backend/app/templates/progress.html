@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Progreso</title>
+  <style>
+    :root {
+      --ink: #102542;
+      --paper: #f7f4ef;
+      --accent: #1f4e79;
+      --muted: #5f6b7a;
+      --card: #ffffff;
+      --border: #d8e0ea;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 0% 0%, #d9ecff 0, transparent 35%),
+        radial-gradient(circle at 100% 0%, #ffe7cd 0, transparent 30%),
+        var(--paper);
+      font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+      line-height: 1.35;
+    }
+    .wrap {
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 10mm;
+    }
+    .cover {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 14px 28px rgba(14, 31, 58, 0.12);
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: -80px auto auto -90px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(28, 95, 150, 0.14), rgba(28, 95, 150, 0));
+    }
+    .cover::after {
+      content: "";
+      position: absolute;
+      inset: auto -90px -90px auto;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(230, 126, 34, 0.16), rgba(230, 126, 34, 0));
+    }
+    .cover-top {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 110px 1fr 110px;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .logo-box {
+      height: 100px;
+      border-radius: 12px;
+      border: 1px solid #cfdae8;
+      background: #f7fbff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .logo-fallback {
+      font-size: 11px;
+      text-align: center;
+      color: #6d7d92;
+      font-weight: 700;
+      padding: 0 8px;
+    }
+    .cover-title-wrap {
+      text-align: center;
+    }
+    .cover-title {
+      margin: 0;
+      font-size: 33px;
+      line-height: 1.15;
+      letter-spacing: 0.2px;
+      color: #102542;
+      font-weight: 900;
+    }
+    .cover-subtitle {
+      margin-top: 4px;
+      color: #355170;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .hello-box {
+      position: relative;
+      z-index: 1;
+      margin-top: 8px;
+      background: linear-gradient(135deg, #153f68 0%, #1e5a91 52%, #2f7fb2 100%);
+      color: #fff;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 12px 22px rgba(10, 25, 46, 0.2);
+    }
+    .hello-box p {
+      margin: 0;
+      font-size: 14px;
+    }
+    .intro-grid {
+      position: relative;
+      z-index: 1;
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 10px;
+    }
+    .intro-card {
+      border: 1px solid #cfdbea;
+      background: #fbfdff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 18px rgba(25, 46, 74, 0.08);
+    }
+    .intro-title {
+      margin: 0 0 6px;
+      color: #1d426d;
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .intro-text {
+      margin: 0;
+      color: #203246;
+      font-size: 12px;
+      line-height: 1.42;
+    }
+    .bullets {
+      margin: 6px 0 0 16px;
+      padding: 0;
+    }
+    .bullets li {
+      margin-bottom: 4px;
+      color: #203246;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .goal {
+      position: relative;
+      z-index: 1;
+      margin-top: 10px;
+      border: 1px solid #d1ddeb;
+      border-radius: 12px;
+      background: #f7fbff;
+      padding: 10px 12px;
+    }
+    .goal-title {
+      margin: 0 0 5px;
+      color: #173d66;
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .goal p {
+      margin: 0 0 6px;
+      font-size: 12px;
+      color: #1e3248;
+    }
+    .goal-list {
+      margin: 0;
+      padding: 0 0 0 16px;
+    }
+    .goal-list li {
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: #1e3248;
+      line-height: 1.35;
+    }
+    .meta {
+      margin-top: 7px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+    }
+    .chip {
+      background: #edf4fb;
+      border: 1px solid #c9d8e9;
+      border-radius: 999px;
+      padding: 4px 10px;
+      color: #244260;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 12px;
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(20, 34, 60, 0.08);
+      overflow: hidden;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .section-head {
+      padding: 10px 12px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      font-weight: 800;
+      color: #173d66;
+      background: #f2f7fc;
+    }
+    .badge {
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(16, 37, 66, 0.16);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 7px 8px;
+      vertical-align: middle;
+      font-size: 11px;
+    }
+    th {
+      background: #f2f7fc;
+      color: #1d426d;
+      text-align: left;
+      font-weight: 800;
+    }
+    .col-subject { width: 31%; }
+    .col-qty { width: 10%; text-align: center; font-weight: 700; }
+    .col-good { width: 14%; text-align: center; }
+    .col-bad { width: 14%; text-align: center; }
+    .col-date { width: 16%; }
+    .subject-cell {
+      font-weight: 700;
+    }
+    .subject-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subject-emoji {
+      font-size: 14px;
+      line-height: 1;
+    }
+    .score-grid {
+      width: 34px;
+      height: 34px;
+      margin: 0 auto;
+      border: 1.5px solid var(--box-border-color, #96aac2);
+      border-radius: 6px;
+      background: var(--box-bg-color, #fff);
+    }
+    .date-box {
+      width: 100%;
+      min-height: 28px;
+      border: 1.5px solid var(--box-border-color, #a5b8cd);
+      border-radius: 7px;
+      background: var(--box-bg-color, #fff);
+    }
+    .total-row td {
+      font-weight: 800;
+      background: #f8fbff;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 8px;
+    }
+    .write-block {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px;
+      background: #fcfdff;
+    }
+    .write-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1d426d;
+      margin-bottom: 6px;
+    }
+    .write-area {
+      min-height: 68px;
+      border: 1px solid #c0cada;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .write-area-lg {
+      min-height: 95px;
+    }
+    .summary-section {
+      margin-top: 12px;
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      box-shadow: 0 10px 22px rgba(20, 34, 60, 0.08);
+    }
+    .summary-head {
+      padding: 10px 12px;
+      font-weight: 800;
+      color: #173d66;
+      background: #f2f7fc;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-booklet {
+      font-weight: 800;
+      color: #173d66;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .wrap { max-width: none; margin: 0; padding: 0; }
+      .hero, .section { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="cover">
+      <div class="cover-top">
+        <div class="logo-box">
+          {% if logo_src %}
+          <img src="{{ logo_src }}" alt="Logo Preicfes Material" />
+          {% else %}
+          <div class="logo-fallback">Preicfes Material</div>
+          {% endif %}
+        </div>
+        <div class="cover-title-wrap">
+          <h1 class="cover-title">{{ title_label }}</h1>
+          <div class="cover-subtitle">Preicfes Material</div>
+        </div>
+        <div class="logo-box">
+          {% if logo_src %}
+          <img src="{{ logo_src }}" alt="Logo Preicfes Material" />
+          {% else %}
+          <div class="logo-fallback">Preicfes Material</div>
+          {% endif %}
+        </div>
+      </div>
+      <section class="hello-box">
+        <p><b>¡Hola, {{ student_name or meta.student_name or "Estudiante" }}!</b> Te doy la bienvenida a tu Bitácora o Registro de Progreso ICFES.</p>
+      </section>
+      <section class="intro-grid">
+        <article class="intro-card">
+          <h2 class="intro-title">💡 Instrucciones</h2>
+          <p class="intro-text">Aquí anotarás los puntajes de cada formulario de Google. Este PDF podrás imprimirlo al igual que tu Plan de Estudio Personalizado.</p>
+          <ul class="bullets">
+            <li>A continuación encontrarás una tabla en cada página, son los cuadernillos que debes hacer según el calendario de tu Plan de Estudio 🚀.</li>
+            <li>Están en orden y diferenciados con los mismos colores que escogiste. 🎨</li>
+            <li>En cada simulacro que resolverás hay 8 formularios de google. 📊</li>
+            <li>Todos te dicen tu puntaje al final, esos resultados de cuantas preguntas buenas y malas tuviste son los que debes anotar en cada tabla. 📚</li>
+            <li>Completa también la tabla final con los totales globales. ✔️</li>
+          </ul>
+        </article>
+        <article class="intro-card">
+          <h2 class="intro-title">🧭 Qué registrar en cada página</h2>
+          <ul class="bullets">
+            <li><b>Resultados por formulario:</b> anota preguntas buenas, malas y la fecha de finalización en cada fila.</li>
+            <li><b>Preguntas más difíciles:</b> en ese espacio colocarás los numeros de las preguntas que vayas encontrando que se te dificultaron más, tu escoges cuales</li>
+            <li><b>Temas a reforzar:</b> coloca en ese cuadro los nombres de los temas que no entendiste por completo o que tuviste alguna duda.</li>
+            <li><b>Notas Plan de Mejora:</b> para que libremente anotes las ideas que se te vengan a la mente para mejorar tu estudio</li>
+          </ul>
+        </article>
+      </section>
+      <section class="goal">
+        <h2 class="goal-title">🏆 El objetivo</h2>
+        <p>Que en cualquier momento durante tu preparación puedas:</p>
+        <ul class="goal-list">
+          <li>Reflexionar sobre qué tanto has mejorado o avanzado, tanto a nivel general como por materias.</li>
+          <li>Revisar qué tipo de preguntas son en las que más te equivocas.</li>
+          <li>Encontrar qué materias tienes débiles y cuáles fuertes.</li>
+          <li>Repasar las preguntas más difíciles.</li>
+          <li>Analizar qué puntaje global tienes y qué tan cerca está del que quieres sacar en la prueba real.</li>
+        </ul>
+      </section>
+      <div class="meta">
+        <div class="chip">Estudiante: {{ meta.student_name or "-" }}</div>
+        <div class="chip">Periodo: {{ period_label }}</div>
+        <div class="chip">Tipo: {{ meta.plan_type }}</div>
+      </div>
+    </section>
+
+    {% for section in sections %}
+    <section class="section" style="background: {{ section.booklet_bg_color }}; border-color: {{ section.booklet_border_color }}; --box-bg-color: {{ section.booklet_box_bg_color }}; --box-border-color: {{ section.booklet_box_border_color }};">
+      <div class="section-head" style="background: {{ section.booklet_head_bg_color }}; border-bottom-color: {{ section.booklet_border_color }}; border-left: 10px solid {{ section.booklet_color }};">
+        <div>{{ section.booklet_name }}</div>
+        <div class="badge">Total preguntas: {{ section.total }}</div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th class="col-subject">Materia / Formulario</th>
+            <th class="col-qty">Preguntas</th>
+            <th class="col-good">Buenas</th>
+            <th class="col-bad">Malas</th>
+            <th class="col-date">Fecha de finalización</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in section.rows %}
+          <tr>
+            <td class="subject-cell" style="background: {{ row.color }}22; border-left: 6px solid {{ row.color }};">
+              <div class="subject-main">
+                <span class="subject-emoji">{{ row.emoji }}</span>
+                <span style="color: {{ row.color }};">{{ row.label }}</span>
+              </div>
+            </td>
+            <td class="col-qty">{{ row.questions }}</td>
+            <td><div class="score-grid"></div></td>
+            <td><div class="score-grid"></div></td>
+            <td><div class="date-box"></div></td>
+          </tr>
+          {% endfor %}
+          <tr class="total-row">
+            <td>Total</td>
+            <td class="col-qty">{{ section.total }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="notes-grid">
+        <div class="write-block">
+          <div class="write-title">Preguntas que me parecieron más dificiles</div>
+          <div class="write-area write-area-lg"></div>
+        </div>
+        <div class="write-block">
+          <div class="write-title">Temas a reforzar o que no entendí</div>
+          <div class="write-area"></div>
+        </div>
+        <div class="write-block">
+          <div class="write-title">Notas / Plan de mejora</div>
+          <div class="write-area"></div>
+        </div>
+      </div>
+    </section>
+    {% endfor %}
+
+    <section class="summary-section">
+      <div class="summary-head">Resumen por cuadernillo realizado</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Cuadernillo</th>
+            <th class="col-qty">Preguntas</th>
+            <th class="col-good">Total buenas</th>
+            <th class="col-bad">Total malas</th>
+            <th class="col-date">Fecha de finalización</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for section in sections %}
+          <tr style="background: {{ section.booklet_bg_color }};">
+            <td class="summary-booklet" style="border-left: 6px solid {{ section.booklet_color }};">{{ section.booklet_name }}</td>
+            <td class="col-qty">254</td>
+            <td><div class="score-grid" style="width: 42px; height: 32px;"></div></td>
+            <td><div class="score-grid" style="width: 42px; height: 32px;"></div></td>
+            <td><div class="date-box"></div></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
